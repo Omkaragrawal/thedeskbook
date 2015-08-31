@@ -14,6 +14,7 @@ var router          =		express.Router();
 app.set('views', path.join(__dirname,'../','views'));
 app.use(express.static(path.join(__dirname,'../','public')));
 app.use(express.static(path.join(__dirname,'../','Lib')));
+app.use(express.static(path.join(__dirname,'../','client/public')));
 app.engine('html', require('ejs').renderFile);
 
 app.use(session({
