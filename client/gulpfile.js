@@ -22,22 +22,29 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('./src/'));
 })
 
-gulp.task('copy', function() {
+gulp.task('copy', ['browserify'], function() {
     gulp.src('./src/**/*.*')
         .pipe(gulp.dest('./public'))
 });
+
+gulp.task('build',['lint', 'browserify', 'copy']);
 
 gulp.task('server', function () {
 	nodemon({
 		script: '../bin/index.js'
 		, ext: 'js html'
 		, env: { 'NODE_ENV': 'development' }
+		, tasks: ['build']
 	})
 })
 
-gulp.task('default', ['lint', 'browserify', 'copy', 'server', 'watch'])
+
+gulp.task('default', ['build'] ,function(){
+	gulp.start('server');
+	gulp.start('watch');
+})
 
 
 gulp.task('watch', function() {
-    gulp.watch('app/**/*.js', ['default'])
+    gulp.watch('./src/**/*.*', ['build'])
 })

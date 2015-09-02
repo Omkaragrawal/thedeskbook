@@ -1,6 +1,9 @@
 require('angular');
 require('angular-ui-router');
-var app = angular.module('theDeskBook', ['ui.router']);
+require('angular-aria');
+require('angular-animate');
+require('angular-material');
+var app = angular.module('theDeskBook', ['ui.router','ngMaterial']);
 
 app.controller('MainController', function($scope) {
     $scope.message = 'Angular Works!';
@@ -18,7 +21,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl:"app/components/landing/landing.html"
 			},
 			"header@landing":{
-				template:"YOOOO"
+				templateUrl:"app/shared/header/header1.html"
 			}
 		}
 	});
