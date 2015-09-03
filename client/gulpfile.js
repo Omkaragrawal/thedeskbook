@@ -1,5 +1,6 @@
 var gulp = require('gulp');
-var sass = require('gulp-ruby-sass');
+//var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
 var connect = require('gulp-connect');
 var nodemon = require('gulp-nodemon');
 var browserify = require('browserify');
@@ -22,12 +23,18 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('./src/'));
 })
 
-gulp.task('copy', ['browserify'], function() {
+gulp.task('copy', ['browserify','scss'], function() {
     gulp.src('./src/**/*.*')
         .pipe(gulp.dest('./public'))
 });
 
-gulp.task('build',['lint', 'browserify', 'copy']);
+gulp.task('scss', function() {
+    gulp.src('./src/assets/scss/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./src/assets/stylesheets/'));
+});
+
+gulp.task('build',['lint', 'browserify', 'scss', 'copy']);
 
 gulp.task('server', function () {
 	nodemon({

@@ -1,0 +1,12 @@
+$headerTextColor: #ffffff;
+
+md-toolbar {
+	form {
+		padding-top:30px;
+		md-input-container {
+			label {
+				color: $headerTextColor;
+			}
+		}
+	}
+}
