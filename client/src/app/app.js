@@ -9,6 +9,14 @@ app.controller('MainController', function($scope) {
     $scope.message = 'Angular Works!';
 });
 
+app.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('whiteTheme')
+    .primaryPalette('yellow');// specify primary color, all
+                            // other color intentions will be inherited
+                            // from default
+});
+
+
 app.config(function($stateProvider, $urlRouterProvider) {
 	
 	$urlRouterProvider.otherwise("/");

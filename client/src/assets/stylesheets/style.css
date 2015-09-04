@@ -1,4 +1,8 @@
 md-toolbar form {
-  padding-top: 30px; }
+  margin-top: 30px; }
   md-toolbar form md-input-container label {
-    color: #ffffff; }
+    color: #ffffff !important; }
+  md-toolbar form md-input-container input {
+    color: #ffffff !important; }
+  md-toolbar form md-input-container button {
+    margin-top: 25% !important; }
