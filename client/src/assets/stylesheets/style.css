@@ -6,3 +6,12 @@ md-toolbar form {
     color: #ffffff !important; }
   md-toolbar form md-input-container button {
     margin-top: 25% !important; }
+
+.landing md-whiteframe {
+  max-width: 500px;
+  margin-top: 115px;
+  width: 50%; }
+
+.footer {
+  color: #ffffff;
+  background-color: #424242; }

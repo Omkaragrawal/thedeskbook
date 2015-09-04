@@ -54442,9 +54442,8 @@ app.controller('MainController', function($scope) {
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
-    .primaryPalette('yellow');// specify primary color, all
-                            // other color intentions will be inherited
-                            // from default
+    .primaryPalette('yellow')
+	.backgroundPalette('blue-grey');
 });
 
 

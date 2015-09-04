@@ -1,4 +1,6 @@
 $headerTextColor: #ffffff;
+$footerBackground : #424242;
+$footerText : #ffffff;
 
 md-toolbar {
 	form {
@@ -15,4 +17,17 @@ md-toolbar {
 			}
 		}
 	}
+}
+
+.landing {
+	md-whiteframe {
+		max-width:500px;
+		margin-top: 115px;
+		width:50%;
+	}
+}
+
+.footer {
+	color: $footerText;
+	background-color: $footerBackground;
 }
