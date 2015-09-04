@@ -1,0 +1,27 @@
+<div ui-view='header'></div>
+ <md-content layout-fill>
+<div layout="column" class="landing" layout-fill layout-align="center center" style="padding-bottom: 32px;">
+  <md-whiteframe class="md-whiteframe-z5" layout="column" layout-align="center center">
+	<form name="signupform" flex layout="column">
+		<h2 class="md-warn">Join Deskbook now</h2>
+		<md-input-container flex>
+			<label>Email</label>
+			<input flex required name="email">
+		</md-input-container>
+		<div layout="row" flex>
+			<md-input-container flex="45">
+				<label >Name</label>
+				<input type="text" required name="name">
+			</md-input-container>
+			<md-input-container flex="45">
+				<label >Password</label>
+				<input type="password" required name="password">
+			</md-input-container>
+		</div>
+		<md-input-container flex>
+				 <md-button flex class="md-raised md-primary">Sign Up</md-button>
+		</md-input-container >
+	</form>
+  </md-whiteframe>
+</div>
+</md-content>

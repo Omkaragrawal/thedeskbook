@@ -1,0 +1,17 @@
+md-toolbar form {
+  margin-top: 30px; }
+  md-toolbar form md-input-container label {
+    color: #ffffff !important; }
+  md-toolbar form md-input-container input {
+    color: #ffffff !important; }
+  md-toolbar form md-input-container button {
+    margin-top: 25% !important; }
+
+.landing md-whiteframe {
+  max-width: 500px;
+  margin-top: 115px;
+  width: 50%; }
+
+.footer {
+  color: #ffffff;
+  background-color: #424242; }

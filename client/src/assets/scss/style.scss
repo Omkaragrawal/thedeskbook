@@ -1,0 +1,33 @@
+$headerTextColor: #ffffff;
+$footerBackground : #424242;
+$footerText : #ffffff;
+
+md-toolbar {
+	form {
+		margin-top:30px;
+		md-input-container {
+			label {
+				color: $headerTextColor !important;
+			}
+			input {
+				color: $headerTextColor !important;
+			}
+			button {
+				margin-top:25% !important;
+			}
+		}
+	}
+}
+
+.landing {
+	md-whiteframe {
+		max-width:500px;
+		margin-top: 115px;
+		width:50%;
+	}
+}
+
+.footer {
+	color: $footerText;
+	background-color: $footerBackground;
+}
