@@ -1,9 +1,12 @@
 require('angular');
+require('../env/dev.js');
 require('angular-ui-router');
 require('angular-aria');
 require('angular-animate');
 require('angular-material');
-var app = angular.module('theDeskBook', ['ui.router','ngMaterial']);
+require('angular-messages');
+require('./components/landing/landing.js');
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages']);
 
 app.controller('MainController', function($scope) {
     $scope.message = 'Angular Works!';

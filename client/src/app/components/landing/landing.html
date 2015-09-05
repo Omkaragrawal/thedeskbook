@@ -1,25 +1,34 @@
 <div ui-view='header'></div>
  <md-content layout-fill>
-<div layout="column" class="landing" layout-fill layout-align="center center" style="padding-bottom: 32px;">
+<div layout="column" ng-controller="landingController as landing" class="landing" layout-fill layout-align="center center" style="padding-bottom: 32px;">
   <md-whiteframe class="md-whiteframe-z5" layout="column" layout-align="center center">
-	<form name="signupform" flex layout="column">
+	<form name="landing.signupform" flex layout="column" novalidate>
 		<h2 class="md-warn">Join Deskbook now</h2>
 		<md-input-container flex>
 			<label>Email</label>
-			<input flex required name="email">
+			<input ng-model="landing.registerData.email" type="email" flex required name="email">
+			<div ng-messages="landing.signupform.email.$error" ng-show="landing.signupform.email.$touched">
+				<div ng-messages-include="app/shared/errormessage/message.html"></div>
+			</div>
 		</md-input-container>
 		<div layout="row" flex>
 			<md-input-container flex="45">
 				<label >Name</label>
-				<input type="text" required name="name">
+				<input type="text" ng-model="landing.registerData.name" required name="name" autocomplete='off'>
+				<div ng-messages="landing.signupform.name.$error" ng-show="landing.signupform.name.$touched">
+					<div ng-messages-include="app/shared/errormessage/message.html"></div>
+				</div>
 			</md-input-container>
 			<md-input-container flex="45">
 				<label >Password</label>
-				<input type="password" required name="password">
+				<input type="password" required name="password" ng-model="landing.registerData.password" autocomplete='off'>
+				<div ng-messages="landing.signupform.password.$error" ng-show="landing.signupform.password.$touched">
+					<div ng-messages-include="app/shared/errormessage/message.html"></div>
+				</div>
 			</md-input-container>
 		</div>
 		<md-input-container flex>
-				 <md-button flex class="md-raised md-primary">Sign Up</md-button>
+				 <md-button flex class="md-raised md-primary" ng-click="landing.register()">Sign Up</md-button>
 		</md-input-container >
 	</form>
   </md-whiteframe>
