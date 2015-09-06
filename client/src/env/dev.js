@@ -5,5 +5,6 @@ angular.module('theDeskbook.config',[])
   baseUrl: '//localhost:3000/'
 })
 .constant('apis', {
-	register: 'register'
+	register: 'register',
+	feed:'fetchStatus'
 })

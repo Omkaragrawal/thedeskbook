@@ -55121,16 +55121,13 @@ require('angular-animate');
 require('angular-material');
 require('angular-messages');
 require('./components/landing/landing.js');
-var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages']);
-
-app.controller('MainController', function($scope) {
-    $scope.message = 'Angular Works!';
-});
+require('./components/wall/wall.js');
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall']);
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
     .primaryPalette('yellow')
-	.backgroundPalette('blue-grey');
+	.backgroundPalette('grey');
 });
 
 
@@ -55149,9 +55146,20 @@ app.config(function($stateProvider, $urlRouterProvider) {
 				templateUrl:"app/shared/header/header1.html"
 			}
 		}
+	})
+	.state('wall', {
+		url: "/home",
+		views : {
+			"" : {
+				templateUrl:"app/components/wall/wall.html"
+			},
+			"header@wall":{
+				templateUrl:"app/shared/header/header2.html"
+			}
+		}
 	});
 });
-},{"../env/dev.js":14,"./components/landing/landing.js":13,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],13:[function(require,module,exports){
+},{"../env/dev.js":15,"./components/landing/landing.js":13,"./components/wall/wall.js":14,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],13:[function(require,module,exports){
 angular.module('theDeskBook.landing',[])
 .controller('landingController',['landingFactory',function(landingFactory){
 	var vm = this;
@@ -55197,6 +55205,34 @@ angular.module('theDeskBook.landing',[])
 	};
 }]);
 },{}],14:[function(require,module,exports){
+angular.module('theDeskBook.wall',[])
+.controller('wallCtrl',['wallFactory',function(wallFactory){
+	var vm = this;
+	vm.feeds = [];
+	vm.fetchFeed = function(){
+		wallFactory.fetchFeed().then(function(data){
+			if(data.error){
+				//handle error
+			} else {
+				vm.feeds = data.message;
+			}
+		});
+	};
+	vm.fetchFeed();
+}])
+.factory('wallFactory',['$http','server','apis',function($http,server,apis){
+	return {
+		fetchFeed: function(){
+			return $http.get(server.baseUrl+apis.feed).then(function(data){
+				return data.data;
+			},
+			function(error){
+				console.log('error occured');
+			});
+		}
+	};
+}]);
+},{}],15:[function(require,module,exports){
 angular.module('theDeskbook.config',[])
 .constant('server', {
   domain: 'localhost',
@@ -55204,6 +55240,7 @@ angular.module('theDeskbook.config',[])
   baseUrl: '//localhost:3000/'
 })
 .constant('apis', {
-	register: 'register'
+	register: 'register',
+	feed:'fetchStatus'
 })
 },{}]},{},[12]);
