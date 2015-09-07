@@ -1,7 +1,7 @@
 <div ui-view='header'></div>
  <md-content layout-fill>
 <div layout="column" ng-controller="landingController as landing" class="landing" layout-fill layout-align="center center" style="padding-bottom: 32px;">
-  <md-whiteframe class="md-whiteframe-z5" layout="column" layout-align="center center">
+  <div class="signup" layout="column" layout-align="center center">
 	<form name="landing.signupform" flex layout="column" novalidate>
 		<h2 class="md-warn">Join Deskbook now</h2>
 		<md-input-container flex>
@@ -31,6 +31,6 @@
 				 <md-button flex class="md-raised md-primary" ng-click="landing.register()">Sign Up</md-button>
 		</md-input-container >
 	</form>
-  </md-whiteframe>
+  </div>
 </div>
 </md-content>

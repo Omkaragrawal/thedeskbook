@@ -55121,8 +55121,9 @@ require('angular-animate');
 require('angular-material');
 require('angular-messages');
 require('./components/landing/landing.js');
+require('./shared/header/header1.js');
 require('./components/wall/wall.js');
-var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall']);
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall','theDeskBook.login']);
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
@@ -55159,7 +55160,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 		}
 	});
 });
-},{"../env/dev.js":15,"./components/landing/landing.js":13,"./components/wall/wall.js":14,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],13:[function(require,module,exports){
+},{"../env/dev.js":16,"./components/landing/landing.js":13,"./components/wall/wall.js":14,"./shared/header/header1.js":15,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],13:[function(require,module,exports){
 angular.module('theDeskBook.landing',[])
 .controller('landingController',['landingFactory',function(landingFactory){
 	var vm = this;
@@ -55233,6 +55234,44 @@ angular.module('theDeskBook.wall',[])
 	};
 }]);
 },{}],15:[function(require,module,exports){
+angular.module('theDeskBook.login',[])
+.controller('loginCtrl',['loginFactory',function(loginFactory){
+	var vm = this;
+	vm.loginData = {
+		user_email:"",
+		user_password:""
+	};
+	vm.loginUser = function(){
+		if(vm.loginform.$valid){
+			loginFactory.loginUser(vm.loginData).then(function(data){			
+				if(data.error){
+					//error case
+					console.log(data.message);
+				} else {
+					//setup login
+					//next route
+				}
+			});
+		}else {
+			console.log('error');
+		}
+	};
+}])
+
+.factory('loginFactory',['$http','server','apis',function($http,server,apis){
+	return {
+		loginUser: function(payload){
+			console.log('http://'+server.baseUrl+apis.login);
+			return $http.post(server.baseUrl+apis.login,payload).then(function(data){
+				return data.data;
+			},
+			function(error){
+				console.log('error occured');
+			});
+		}
+	};
+}]);
+},{}],16:[function(require,module,exports){
 angular.module('theDeskbook.config',[])
 .constant('server', {
   domain: 'localhost',
@@ -55241,6 +55280,7 @@ angular.module('theDeskbook.config',[])
 })
 .constant('apis', {
 	register: 'register',
-	feed:'fetchStatus'
+	feed:'fetchStatus',
+	login:'login'
 })
 },{}]},{},[12]);

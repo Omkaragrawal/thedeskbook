@@ -6,5 +6,6 @@ angular.module('theDeskbook.config',[])
 })
 .constant('apis', {
 	register: 'register',
-	feed:'fetchStatus'
+	feed:'fetchStatus',
+	login:'login'
 })

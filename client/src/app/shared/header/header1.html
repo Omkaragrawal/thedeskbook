@@ -1,22 +1,28 @@
 <!-- The top toolbar -->
-<md-toolbar class="md-primary">
+<md-toolbar class="md-primary" ng-controller="loginCtrl as login">
 <div class="md-toolbar-tools">
 
 	<h2>
 	<span>The Deskbook</span>
 	</h2>
 	<span flex></span>
-	<form name="loginform" layout="row" md-theme="whiteTheme">
+	<form name="login.loginform" novalidate layout="row" md-theme="whiteTheme">
 		<md-input-container >
 			<label>Email</label>
-			<input required name="email">
+			<input required type="email" ng-model="login.loginData.user_email" name="email">
+			<div ng-messages="landing.loginform.email.$error" ng-show="landing.loginform.email.$touched">
+				<div ng-messages-include="app/shared/errormessage/message.html"></div>
+			</div>
 		</md-input-container>
 		<md-input-container >
 			<label >Password</label>
-			<input type="password" required name="password">
+			<input type="password" ng-model="login.loginData.user_password" required name="password">
+			<div ng-messages="landing.loginform.password.$error" ng-show="landing.loginform.password.$touched">
+				<div ng-messages-include="app/shared/errormessage/message.html"></div>
+			</div>
 		</md-input-container>
 		<md-input-container >
-			 <md-button class="md-raised md-warn">Log In</md-button>
+			 <md-button class="md-raised md-warn" ng-click="login.loginUser()">Log In</md-button>
 		</md-input-container >
 	</form>
 </div>
