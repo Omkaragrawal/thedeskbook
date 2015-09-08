@@ -1,0 +1,22 @@
+	<div ui-view="header"></div>
+<md-content layout-padding>
+	<div layout-fill layout="row">
+		<div flex="25">
+		</div>
+		<div ng-controller="wallCtrl as wall" class="feeds" flex="50">
+			<md-grid-list md-cols="4" md-row-height="1:1" md-cols-sm="1" md-cols-md="1" md-cols-lg="2" md-cols-gt-lg="2" md-gutter-gt-md="16px" md-gutter="10px" md-gutter-gt-sm="4px">
+				<md-grid-tile ng-repeat="feed in wall.feeds">
+					<md-grid-tile-header>
+						<h3 ng-bind="feed.UserDeskUploadsTitle"></h3>
+					</md-grid-tile-header>
+					<div class="feed">
+						<img ng-src="./{{feed.UserDeskUploadsPath}}"></img>
+					</div>
+					<md-grid-tile-footer>
+						<h3>This is a footer</h3>
+					</md-grid-tile-footer>
+				</md-grid-tile>
+			</md-grid-list>
+		</div>
+	</div>
+</md-content>
