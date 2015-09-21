@@ -5,10 +5,11 @@ require('angular-aria');
 require('angular-animate');
 require('angular-material');
 require('angular-messages');
+require('ngstorage');
 require('./components/landing/landing.js');
 require('./shared/header/header1.js');
 require('./components/wall/wall.js');
-var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall','theDeskBook.login']);
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','ngStorage','theDeskBook.wall','theDeskBook.login']);
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
