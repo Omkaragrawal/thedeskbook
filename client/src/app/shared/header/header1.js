@@ -1,6 +1,7 @@
 angular.module('theDeskBook.login',[])
-.controller('loginCtrl',['loginFactory',function(loginFactory){
+.controller('loginCtrl',['loginFactory','$localStorage','$state','$mdToast',function(loginFactory,$localStorage,$state,$mdToast){
 	var vm = this;
+	$localStorage.$reset(); // reset all user data on 1st load
 	vm.loginData = {
 		user_email:"",
 		user_password:""
@@ -10,8 +11,10 @@ angular.module('theDeskBook.login',[])
 			loginFactory.loginUser(vm.loginData).then(function(data){			
 				if(data.error){
 					//error case
-					console.log(data.message);
+					$mdToast.show($mdToast.simple().content(data.message).position('bottom left'));
 				} else {
+					$localStorage.loggedIn = true;
+					$state.go('wall');
 					//setup login
 					//next route
 				}

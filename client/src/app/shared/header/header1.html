@@ -6,7 +6,7 @@
 	<span>The Deskbook</span>
 	</h2>
 	<span flex></span>
-	<form name="login.loginform" novalidate layout="row" md-theme="whiteTheme">
+	<form name="login.loginform" novalidate layout="row">
 		<md-input-container >
 			<label>Email</label>
 			<input required type="email" ng-model="login.loginData.user_email" name="email">
@@ -17,12 +17,12 @@
 		<md-input-container >
 			<label >Password</label>
 			<input type="password" ng-model="login.loginData.user_password" required name="password">
-			<div ng-messages="landing.loginform.password.$error" ng-show="landing.loginform.password.$touched">
+			<div ng-messages="landing.loginform.password.$error" ng-show="landing.loginform.password.$touched"> 
 				<div ng-messages-include="app/shared/errormessage/message.html"></div>
 			</div>
 		</md-input-container>
 		<md-input-container >
-			 <md-button class="md-raised md-warn" ng-click="login.loginUser()">Log In</md-button>
+			 <md-button class="md-warn" ng-click="login.loginUser()">Log In</md-button>
 		</md-input-container >
 	</form>
 </div>

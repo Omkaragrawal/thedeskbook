@@ -5,7 +5,8 @@ md-toolbar form {
   md-toolbar form md-input-container input {
     color: #ffffff !important; }
   md-toolbar form md-input-container button {
-    margin-top: 25% !important; }
+    margin-top: 25% !important;
+    font-weight: bold !important; }
 
 .feeds md-grid-list md-grid-tile {
   background-color: #B9F6CA; }
@@ -39,7 +40,8 @@ md-toolbar form {
 .landing .signup {
   max-width: 500px;
   margin-top: 115px;
-  width: 50%; }
+  width: 50%;
+  border: 1px solid #ccc; }
 
 .footer {
   color: #ffffff;

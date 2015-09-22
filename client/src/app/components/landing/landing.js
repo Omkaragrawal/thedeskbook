@@ -1,5 +1,5 @@
 angular.module('theDeskBook.landing',[])
-.controller('landingController',['landingFactory',function(landingFactory){
+.controller('landingController',['landingFactory','$mdToast' ,function(landingFactory, $mdToast){
 	var vm = this;
 	vm.registerData = {
 		name:'',
@@ -17,9 +17,14 @@ angular.module('theDeskBook.landing',[])
 			landingFactory.registerUser(payload).then(function(data){
 			
 				if(data.error){
-					//error case
+					$mdToast.show($mdToast.simple().content(data.message).position('bottom left'));
 					console.log(data.message);
 				} else {
+					$mdToast.show($mdToast.simple()
+									.content('We have droped in an email in your inbox, please click on the confirmation link to complete registeration.')
+									.position('bottom left')
+									.action('OK').hideDelay(0)
+								);
 					//next route
 				}
 			});

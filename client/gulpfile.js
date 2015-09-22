@@ -6,6 +6,8 @@ var nodemon = require('gulp-nodemon');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var jshint = require('gulp-jshint');
+var shell = require('gulp-shell');
+var browserSync = require('browser-sync').create();
 
 gulp.task('lint', function() {
   return gulp.src('./src/app/**/*.js')
@@ -26,6 +28,7 @@ gulp.task('browserify', function() {
 gulp.task('copy', ['browserify','scss'], function() {
     gulp.src('./src/**/*.*')
         .pipe(gulp.dest('./public'))
+		.pipe(browserSync.stream())
 });
 
 gulp.task('scss', function() {
@@ -36,22 +39,44 @@ gulp.task('scss', function() {
 
 gulp.task('build',['lint', 'browserify', 'scss', 'copy']);
 
-gulp.task('server', function () {
-	nodemon({
+/* gulp.task('server', ['build'], shell.task([
+	'node ../bin/index.js'
+])) */
+gulp.task('server',['build'], function (cb) {
+	var started = false;
+	return nodemon({
 		script: '../bin/index.js'
-		, ext: 'js html'
+		, ext:'html js'
 		, env: { 'NODE_ENV': 'development' }
-		, tasks: ['build']
-	})
+		, ignore: ["../"]
+	}).on('start', function () {
+		// to avoid nodemon being started multiple times
+		// thanks @matthisk
+		if (!started) {
+			cb();
+			started = true;
+		} 
+	});
 })
 
 
-gulp.task('default', ['build'] ,function(){
-	gulp.start('server');
-	gulp.start('watch');
+gulp.task('browser-sync', ['server'], function() {
+	browserSync.init(null, {
+		proxy: "http://localhost:3000",
+        files: ["./src/**/*.*"],
+        browser: "firefox",
+        port: 7000,
+	});
+});
+
+
+gulp.task('default', ['browser-sync'] ,function(){
+	gulp.watch(['./src/**/*.*',  '!./src/main.js'], ['build']);
+	gulp.watch("./public/index.html").on('change', browserSync.reload);
 })
 
 
 gulp.task('watch', function() {
-    gulp.watch('./src/**/*.*', ['build'])
+    gulp.watch(['./src/**/*.*',  '!./src/main.js', '!./src/assets/scss/*.scss'], ['build']);
+	gulp.watch("./public/index.html").on('change', browserSync.reload);
 })
