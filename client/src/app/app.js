@@ -17,6 +17,22 @@ app.config(function($mdThemingProvider) {
 	.backgroundPalette('grey');
 });
 
+app.run(['$rootScope', '$localStorage','$state',function($rootScope, $localStorage, $state){
+	$rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams){
+		console.log($localStorage.loggedIn);
+		if(toState.name.indexOf('landing') === -1 && !$localStorage.loggedIn){ //Going on secure page and not logged in
+			e.preventDefault();
+			$state.go('landing');
+		} else if(toState.name.indexOf('landing') !== -1 && !!$localStorage.loggedIn){ //Going on logged in page, when already logged in
+			e.preventDefault();
+			if(!!fromState.name){
+				$state.go(fromState.name);
+			}else {
+				$state.go('wall');
+			}
+		}
+	});
+}]);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	

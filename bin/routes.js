@@ -38,7 +38,7 @@ var ExpressRouter = function(app,router,io) {
   });
 
   router.get("/fetchStatus",function(req,res){
-    //if(req.session.key) {
+    if(req.session.key) {
       handle_database(req,"getStatus",function(response){
         if(!response) {
           res.json({"error" : true, "message" : "There is no status to show."});
@@ -46,9 +46,9 @@ var ExpressRouter = function(app,router,io) {
           res.json({"error" : false, "message" : response});
         }
       });
-    //} else {
-    //  res.json({"error" : true, "message" : "Please login first."});
-    //}
+    } else {
+      res.json({"error" : true, "message" : "Please login first."});
+    }
   });
 
   router.post("/addStatus"
