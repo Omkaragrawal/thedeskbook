@@ -21450,7 +21450,7 @@ module.exports = 'ngMaterial';
 
 },{"./angular-material":5,"angular":11,"angular-animate":2,"angular-aria":4}],7:[function(require,module,exports){
 /**
- * @license AngularJS v1.5.0-beta.0
+ * @license AngularJS v1.4.5
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -55113,220 +55113,6 @@ require('./angular');
 module.exports = angular;
 
 },{"./angular":10}],12:[function(require,module,exports){
-(function (root, factory) {
-  'use strict';
-
-  if (typeof define === 'function' && define.amd) {
-    define(['angular'], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('angular'));
-  } else {
-    // Browser globals (root is window), we don't register it.
-    factory(root.angular);
-  }
-}(this , function (angular) {
-    'use strict';
-
-    // RequireJS does not pass in Angular to us (will be undefined).
-    // Fallback to window which should mostly be there.
-    angular = (angular && angular.module ) ? angular : window.angular;
-
-    /**
-     * @ngdoc overview
-     * @name ngStorage
-     */
-
-    return angular.module('ngStorage', [])
-
-    /**
-     * @ngdoc object
-     * @name ngStorage.$localStorage
-     * @requires $rootScope
-     * @requires $window
-     */
-
-    .provider('$localStorage', _storageProvider('localStorage'))
-
-    /**
-     * @ngdoc object
-     * @name ngStorage.$sessionStorage
-     * @requires $rootScope
-     * @requires $window
-     */
-
-    .provider('$sessionStorage', _storageProvider('sessionStorage'));
-
-    function _storageProvider(storageType) {
-        return function () {
-          var storageKeyPrefix = 'ngStorage-';
-
-          this.setKeyPrefix = function (prefix) {
-            if (typeof prefix !== 'string') {
-              throw new TypeError('[ngStorage] - ' + storageType + 'Provider.setKeyPrefix() expects a String.');
-            }
-            storageKeyPrefix = prefix;
-          };
-
-          var serializer = angular.toJson;
-          var deserializer = angular.fromJson;
-
-          this.setSerializer = function (s) {
-            if (typeof s !== 'function') {
-              throw new TypeError('[ngStorage] - ' + storageType + 'Provider.setSerializer expects a function.');
-            }
-
-            serializer = s;
-          };
-
-          this.setDeserializer = function (d) {
-            if (typeof d !== 'function') {
-              throw new TypeError('[ngStorage] - ' + storageType + 'Provider.setDeserializer expects a function.');
-            }
-
-            deserializer = d;
-          };
-
-          // Note: This is not very elegant at all.
-          this.get = function (key) {
-            return deserializer(window[storageType].getItem(storageKeyPrefix + key));
-          };
-
-          // Note: This is not very elegant at all.
-          this.set = function (key, value) {
-            return window[storageType].setItem(storageKeyPrefix + key, serializer(value));
-          };
-
-          this.$get = [
-              '$rootScope',
-              '$window',
-              '$log',
-              '$timeout',
-
-              function(
-                  $rootScope,
-                  $window,
-                  $log,
-                  $timeout
-              ){
-                function isStorageSupported(storageType) {
-
-                    // Some installations of IE, for an unknown reason, throw "SCRIPT5: Error: Access is denied"
-                    // when accessing window.localStorage. This happens before you try to do anything with it. Catch
-                    // that error and allow execution to continue.
-
-                    // fix 'SecurityError: DOM Exception 18' exception in Desktop Safari, Mobile Safari
-                    // when "Block cookies": "Always block" is turned on
-                    var supported;
-                    try {
-                        supported = $window[storageType];
-                    }
-                    catch (err) {
-                        supported = false;
-                    }
-
-                    // When Safari (OS X or iOS) is in private browsing mode, it appears as though localStorage
-                    // is available, but trying to call .setItem throws an exception below:
-                    // "QUOTA_EXCEEDED_ERR: DOM Exception 22: An attempt was made to add something to storage that exceeded the quota."
-                    if (supported && storageType === 'localStorage') {
-                        var key = '__' + Math.round(Math.random() * 1e7);
-
-                        try {
-                            localStorage.setItem(key, key);
-                            localStorage.removeItem(key);
-                        }
-                        catch (err) {
-                            supported = false;
-                        }
-                    }
-
-                    return supported;
-                }
-
-                // The magic number 10 is used which only works for some keyPrefixes...
-                // See https://github.com/gsklee/ngStorage/issues/137
-                var prefixLength = storageKeyPrefix.length;
-
-                // #9: Assign a placeholder object if Web Storage is unavailable to prevent breaking the entire AngularJS app
-                var webStorage = isStorageSupported(storageType) || ($log.warn('This browser does not support Web Storage!'), {setItem: angular.noop, getItem: angular.noop}),
-                    $storage = {
-                        $default: function(items) {
-                            for (var k in items) {
-                                angular.isDefined($storage[k]) || ($storage[k] = items[k]);
-                            }
-
-                            $storage.$sync();
-                            return $storage;
-                        },
-                        $reset: function(items) {
-                            for (var k in $storage) {
-                                '$' === k[0] || (delete $storage[k] && webStorage.removeItem(storageKeyPrefix + k));
-                            }
-
-                            return $storage.$default(items);
-                        },
-                        $sync: function () {
-                            for (var i = 0, l = webStorage.length, k; i < l; i++) {
-                                // #8, #10: `webStorage.key(i)` may be an empty string (or throw an exception in IE9 if `webStorage` is empty)
-                                (k = webStorage.key(i)) && storageKeyPrefix === k.slice(0, prefixLength) && ($storage[k.slice(prefixLength)] = deserializer(webStorage.getItem(k)));
-                            }
-                        },
-                        $apply: function() {
-                            var temp$storage;
-
-                            _debounce = null;
-
-                            if (!angular.equals($storage, _last$storage)) {
-                                temp$storage = angular.copy(_last$storage);
-                                angular.forEach($storage, function(v, k) {
-                                    if (angular.isDefined(v) && '$' !== k[0]) {
-                                        webStorage.setItem(storageKeyPrefix + k, serializer(v))
-                                        delete temp$storage[k];
-                                    }
-                                });
-
-                                for (var k in temp$storage) {
-                                    webStorage.removeItem(storageKeyPrefix + k);
-                                }
-
-                                _last$storage = angular.copy($storage);
-                            }
-                        },
-                    },
-                    _last$storage,
-                    _debounce;
-
-                $storage.$sync();
-
-                _last$storage = angular.copy($storage);
-
-                $rootScope.$watch(function() {
-                    _debounce || (_debounce = $timeout($storage.$apply, 100, false));
-                });
-
-                // #6: Use `$window.addEventListener` instead of `angular.element` to avoid the jQuery-specific `event.originalEvent`
-                $window.addEventListener && $window.addEventListener('storage', function(event) {
-                    if (storageKeyPrefix === event.key.slice(0, prefixLength)) {
-                        event.newValue ? $storage[event.key.slice(prefixLength)] = deserializer(event.newValue) : delete $storage[event.key.slice(prefixLength)];
-
-                        _last$storage = angular.copy($storage);
-
-                        $rootScope.$apply();
-                    }
-                });
-
-                $window.addEventListener && $window.addEventListener('beforeunload', function() {
-                    $storage.$apply();
-                });
-
-                return $storage;
-            }
-        ];
-      };
-    }
-
-}));
-
-},{"angular":11}],13:[function(require,module,exports){
 require('angular');
 require('../env/dev.js');
 require('angular-ui-router');
@@ -55334,11 +55120,10 @@ require('angular-aria');
 require('angular-animate');
 require('angular-material');
 require('angular-messages');
-require('ngstorage');
 require('./components/landing/landing.js');
 require('./shared/header/header1.js');
 require('./components/wall/wall.js');
-var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','ngStorage','theDeskBook.wall','theDeskBook.login']);
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall','theDeskBook.login']);
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
@@ -55346,22 +55131,6 @@ app.config(function($mdThemingProvider) {
 	.backgroundPalette('grey');
 });
 
-app.run(['$rootScope', '$localStorage','$state',function($rootScope, $localStorage, $state){
-	$rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams){
-		console.log($localStorage.loggedIn);
-		if(toState.name.indexOf('landing') === -1 && !$localStorage.loggedIn){ //Going on secure page and not logged in
-			e.preventDefault();
-			$state.go('landing');
-		} else if(toState.name.indexOf('landing') !== -1 && !!$localStorage.loggedIn){ //Going on logged in page, when already logged in
-			e.preventDefault();
-			if(!!fromState.name){
-				$state.go(fromState.name);
-			}else {
-				$state.go('wall')
-			}
-		}
-	})
-}]);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	
@@ -55391,9 +55160,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
 		}
 	});
 });
-},{"../env/dev.js":17,"./components/landing/landing.js":14,"./components/wall/wall.js":15,"./shared/header/header1.js":16,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9,"ngstorage":12}],14:[function(require,module,exports){
+},{"../env/dev.js":16,"./components/landing/landing.js":13,"./components/wall/wall.js":14,"./shared/header/header1.js":15,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],13:[function(require,module,exports){
 angular.module('theDeskBook.landing',[])
-.controller('landingController',['landingFactory','$mdToast' ,function(landingFactory, $mdToast){
+.controller('landingController',['landingFactory',function(landingFactory){
 	var vm = this;
 	vm.registerData = {
 		name:'',
@@ -55411,14 +55180,9 @@ angular.module('theDeskBook.landing',[])
 			landingFactory.registerUser(payload).then(function(data){
 			
 				if(data.error){
-					$mdToast.show($mdToast.simple().content(data.message).position('bottom left'));
+					//error case
 					console.log(data.message);
 				} else {
-					$mdToast.show($mdToast.simple()
-									.content('We have droped in an email in your inbox, please click on the confirmation link to complete registeration.')
-									.position('bottom left')
-									.action('OK').hideDelay(0)
-								);
 					//next route
 				}
 			});
@@ -55441,7 +55205,7 @@ angular.module('theDeskBook.landing',[])
 		}
 	};
 }]);
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 angular.module('theDeskBook.wall',[])
 .controller('wallCtrl',['wallFactory',function(wallFactory){
 	var vm = this;
@@ -55469,11 +55233,10 @@ angular.module('theDeskBook.wall',[])
 		}
 	};
 }]);
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 angular.module('theDeskBook.login',[])
-.controller('loginCtrl',['loginFactory','$localStorage','$state','$mdToast',function(loginFactory,$localStorage,$state,$mdToast){
+.controller('loginCtrl',['loginFactory',function(loginFactory){
 	var vm = this;
-	$localStorage.$reset(); // reset all user data on 1st load
 	vm.loginData = {
 		user_email:"",
 		user_password:""
@@ -55483,10 +55246,8 @@ angular.module('theDeskBook.login',[])
 			loginFactory.loginUser(vm.loginData).then(function(data){			
 				if(data.error){
 					//error case
-					$mdToast.show($mdToast.simple().content(data.message).position('bottom left'));
+					console.log(data.message);
 				} else {
-					$localStorage.loggedIn = true;
-					$state.go('wall');
 					//setup login
 					//next route
 				}
@@ -55510,7 +55271,7 @@ angular.module('theDeskBook.login',[])
 		}
 	};
 }]);
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 angular.module('theDeskbook.config',[])
 .constant('server', {
   domain: 'localhost',
@@ -55522,4 +55283,4 @@ angular.module('theDeskbook.config',[])
 	feed:'fetchStatus',
 	login:'login'
 })
-},{}]},{},[13]);
+},{}]},{},[12]);
