@@ -5,11 +5,10 @@ require('angular-aria');
 require('angular-animate');
 require('angular-material');
 require('angular-messages');
-require('ngstorage');
 require('./components/landing/landing.js');
 require('./shared/header/header1.js');
 require('./components/wall/wall.js');
-var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','ngStorage','theDeskBook.wall','theDeskBook.login']);
+var app = angular.module('theDeskBook', ['theDeskbook.config','ui.router','ngMaterial','theDeskBook.landing','ngMessages','theDeskBook.wall','theDeskBook.login']);
 
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('whiteTheme')
@@ -17,22 +16,6 @@ app.config(function($mdThemingProvider) {
 	.backgroundPalette('grey');
 });
 
-app.run(['$rootScope', '$localStorage','$state',function($rootScope, $localStorage, $state){
-	$rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams){
-		console.log($localStorage.loggedIn);
-		if(toState.name.indexOf('landing') === -1 && !$localStorage.loggedIn){ //Going on secure page and not logged in
-			e.preventDefault();
-			$state.go('landing');
-		} else if(toState.name.indexOf('landing') !== -1 && !!$localStorage.loggedIn){ //Going on logged in page, when already logged in
-			e.preventDefault();
-			if(!!fromState.name){
-				$state.go(fromState.name);
-			}else {
-				$state.go('wall');
-			}
-		}
-	});
-}]);
 
 app.config(function($stateProvider, $urlRouterProvider) {
 	
